@@ -1,10 +1,10 @@
-import {IProduct} from "../../types";
+import {IProduct} from '../../types';
 
 export class Catalog {
     private products: IProduct[] = [];
     private currentItem: IProduct | null = null;
 
-    setItems(products: IProduct[]) {
+    setItems(products: IProduct[]): void {
         this.products = products;
     }
 

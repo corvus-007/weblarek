@@ -1,4 +1,4 @@
-import {IProduct} from "../../types";
+import {IProduct} from '../../types';
 
 export class Basket {
     private products: IProduct[] = [];
@@ -29,7 +29,7 @@ export class Basket {
         }, 0);
     }
 
-    getTotalItems() {
+    getTotalItems(): number {
         return this.products.length;
     }
 
