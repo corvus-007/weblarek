@@ -8,6 +8,8 @@ export interface IApi {
 
 export type TPayment = 'card' | 'cash' | '';
 
+export type TBuyerValidityMessages = { [k in keyof IBuyer]?: string };
+
 export interface IProduct {
     id: string;
     description: string;

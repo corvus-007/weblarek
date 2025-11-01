@@ -1,4 +1,4 @@
-import {IBuyer, TPayment} from "../../types";
+import {IBuyer, TBuyerValidityMessages, TPayment} from '../../types';
 
 export class Customer {
     private payment: TPayment = '';
@@ -6,19 +6,19 @@ export class Customer {
     private phone: string = '';
     private email: string = '';
 
-    savePayment(payment: TPayment): void {
+    setPayment(payment: TPayment): void {
         this.payment = payment;
     }
 
-    saveAddress(address: string): void {
+    setAddress(address: string): void {
         this.address = address;
     }
 
-    savePhone(phone: string): void {
+    setPhone(phone: string): void {
         this.phone = phone;
     }
 
-    saveEmail(email: string): void {
+    setEmail(email: string): void {
         this.email = email;
     }
 
@@ -28,22 +28,35 @@ export class Customer {
             address: this.address,
             phone: this.phone,
             email: this.email,
-        }
+        };
     }
 
-    clear(): any {
+    clear(): void {
         this.payment = '';
         this.address = '';
         this.phone = '';
         this.email = '';
     }
 
-    checkValidity(): { [k in keyof IBuyer]?: string } {
-        return {
-            payment: "",
-            address: "",
-            phone: "",
-            email: "",
+    checkValidity(): TBuyerValidityMessages {
+        const errors: TBuyerValidityMessages = {};
+
+        if (!this.payment) {
+            errors.payment = 'Выберите способ оплаты';
         }
+
+        if (!this.address.trim()) {
+            errors.address = 'Необходимо указать адрес';
+        }
+
+        if (!this.phone.trim()) {
+            errors.phone = 'Необходимо указать email';
+        }
+
+        if (!this.email.trim()) {
+            errors.email = 'Необходимо указать телефон';
+        }
+
+        return errors;
     }
 }
