@@ -1,23 +1,23 @@
 import {IProduct} from '../../types';
 
 export class Catalog {
-    private products: IProduct[] = [];
+    private items: IProduct[] = [];
     private currentItem: IProduct | null = null;
 
-    setItems(products: IProduct[]): void {
-        this.products = products;
+    setItems(items: IProduct[]): void {
+        this.items = items;
     }
 
     getItems(): IProduct[] {
-        return this.products;
+        return this.items;
     }
 
-    getItem(productId: string): IProduct | null {
-        return this.products.find(({id}) => id === productId) ?? null;
+    getItem(itemId: string): IProduct | null {
+        return this.items.find(({id}) => id === itemId) ?? null;
     }
 
-    setCurrentItem(product: IProduct | null): void {
-        this.currentItem = product;
+    setCurrentItem(item: IProduct | null): void {
+        this.currentItem = item;
     }
 
     getCurrentItem(): IProduct | null {

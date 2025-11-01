@@ -1,26 +1,26 @@
 import {IProduct} from '../../types';
 
 export class Basket {
-    private products: IProduct[] = [];
+    private items: IProduct[] = [];
 
     getItems(): IProduct[] {
-        return this.products;
+        return this.items;
     }
 
-    addItem(product: IProduct): void {
-        this.products.push(product);
+    addItem(item: IProduct): void {
+        this.items.push(item);
     }
 
-    deleteItem(productToDelete: IProduct): void {
-        this.products = this.products.filter(({id}) => id !== productToDelete.id);
+    deleteItem(itemToDelete: IProduct): void {
+        this.items = this.items.filter(({id}) => id !== itemToDelete.id);
     }
 
     clear() {
-        this.products = [];
+        this.items = [];
     }
 
     getTotalPrice(): number {
-        return this.products.reduce((sum, {price}) => {
+        return this.items.reduce((sum, {price}) => {
             if (price) {
                 sum += price;
             }
@@ -30,10 +30,10 @@ export class Basket {
     }
 
     getTotalItems(): number {
-        return this.products.length;
+        return this.items.length;
     }
 
-    hasItem(productId: string): boolean {
-        return this.products.some(({id}) => id === productId);
+    hasItem(itemId: string): boolean {
+        return this.items.some(({id}) => id === itemId);
     }
 }
