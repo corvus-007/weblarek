@@ -25,3 +25,22 @@ export interface IBuyer {
     phone: string;
     email: string;
 }
+
+export interface IGetProductsApiResponse {
+    total: number;
+    items: IProduct[];
+}
+
+export interface IOrderApiRequest extends IBuyer {
+    total: number;
+    items: string[];
+}
+
+export interface IOrderApiResponse {
+    id: string;
+    total: number;
+}
+
+export interface IErrorApiResponse {
+    error: string;
+}

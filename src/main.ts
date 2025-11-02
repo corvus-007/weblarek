@@ -3,10 +3,14 @@ import {Catalog} from './components/models/Catalog.ts';
 import {Basket} from './components/models/Basket.ts';
 import {Customer} from './components/models/Customer.ts';
 import {apiProducts} from './utils/data.ts';
+import {ProductApi} from './components/api/ProtuctApi.ts';
+import {Api} from './components/base/Api.ts';
+import {API_URL} from './utils/constants.ts';
 
 const catalogModel = new Catalog();
 const basketModel = new Basket();
 const customerModel = new Customer();
+const productApi = new ProductApi(new Api(API_URL));
 
 catalogModel.setItems(apiProducts.items);
 console.log('Сохранение текущего товара');
@@ -46,3 +50,11 @@ console.log('Очистка данных покупателя');
 customerModel.clear();
 console.log('Данные покупателя после очистки', customerModel.getData());
 console.log('Проверка данных покупателя', customerModel.checkValidity());
+
+console.log('====================');
+
+console.log('Получение всех товаров');
+const products = await productApi.getProducts();
+console.log('Сохраняет полученные товары в модель');
+catalogModel.setItems(products.items);
+console.log('Сохраненные товары', catalogModel.getItems());
