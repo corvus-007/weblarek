@@ -6,6 +6,7 @@ import {apiProducts} from './utils/data.ts';
 import {ProductApi} from './components/api/ProtuctApi.ts';
 import {Api} from './components/base/Api.ts';
 import {API_URL} from './utils/constants.ts';
+import {isErrorApiResponse} from './utils/utils.ts';
 
 const catalogModel = new Catalog();
 const basketModel = new Basket();
@@ -54,7 +55,15 @@ console.log('Проверка данных покупателя', customerModel.
 console.log('====================');
 
 console.log('Получение всех товаров');
-const products = await productApi.getProducts();
-console.log('Сохраняет полученные товары в модель');
-catalogModel.setItems(products.items);
-console.log('Сохраненные товары', catalogModel.getItems());
+try {
+    const products = await productApi.getProducts();
+    console.log('Сохраняет полученные товары в модель');
+    catalogModel.setItems(products.items);
+    console.log('Сохраненные товары', catalogModel.getItems());
+} catch (e: unknown) {
+    if (isErrorApiResponse(e)) {
+        console.error(e.error);
+    } else {
+        console.log(e);
+    }
+}
