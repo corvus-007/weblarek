@@ -15,7 +15,7 @@ export class Basket {
         this.items = this.items.filter(({id}) => id !== itemToDelete.id);
     }
 
-    clear() {
+    clear(): void {
         this.items = [];
     }
 
