@@ -1,3 +1,5 @@
+https://github.com/corvus-007/weblarek
+
 # Проектная работа "Веб-ларек"
 
 Стек: HTML, SCSS, TS, Vite
