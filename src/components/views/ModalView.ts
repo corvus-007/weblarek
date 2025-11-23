@@ -8,8 +8,8 @@ interface IModalViewData {
 }
 
 export class ModalView extends Component<IModalViewData> {
-    protected readonly modalContentElement: HTMLElement;
-    protected readonly closeButtonElement: HTMLButtonElement;
+    protected readonly modalContentElem: HTMLElement;
+    protected readonly closeButtonElem: HTMLButtonElement;
 
     constructor(
         protected readonly container: HTMLElement,
@@ -17,33 +17,44 @@ export class ModalView extends Component<IModalViewData> {
     ) {
         super(container);
 
-        this.modalContentElement = ensureElement<HTMLElement>('.modal__content', this.container);
-        this.closeButtonElement = ensureElement<HTMLButtonElement>('.modal__close', this.container);
+        this.modalContentElem = ensureElement<HTMLElement>('.modal__content', this.container);
+        this.closeButtonElem = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
-        this.closeButtonElement.addEventListener('click', () => {
+        this.closeButtonElem.addEventListener('click', () => {
             events.emit(eventNames.MODAL_CLOSE);
             this.closeModal();
         });
     }
 
-    protected documentPressEscHandler = (e: KeyboardEvent) => {
-        if (e.code === 'Escape') {
+    protected documentPressEscHandler = (evt: KeyboardEvent) => {
+        if (evt.code === 'Escape') {
+            this.closeModal();
+        }
+    };
+
+    protected modalClickHandler = (evt: MouseEvent) => {
+        const target = evt.target as HTMLElement;
+        const currentTarget = evt.currentTarget as HTMLElement;
+
+        if (target === currentTarget) {
             this.closeModal();
         }
     };
 
     protected set content(content: HTMLElement) {
-        this.modalContentElement.replaceChildren(content);
+        this.modalContentElem.replaceChildren(content);
         this.showModal();
     }
 
     showModal() {
         this.container.classList.add('modal_active');
         document.addEventListener('keydown', this.documentPressEscHandler);
+        this.container.addEventListener('click', this.modalClickHandler);
     }
 
     closeModal() {
         this.container.classList.remove('modal_active');
         document.removeEventListener('keydown', this.documentPressEscHandler);
+        this.container.removeEventListener('click', this.modalClickHandler);
     }
 }
