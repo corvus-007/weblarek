@@ -46,7 +46,7 @@ export class ModalView extends Component<IModalViewData> {
         this.showModal();
     }
 
-    showModal() {
+    protected showModal() {
         this.container.classList.add('modal_active');
         document.addEventListener('keydown', this.documentPressEscHandler);
         this.container.addEventListener('click', this.modalClickHandler);

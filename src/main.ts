@@ -10,11 +10,13 @@ import {HeaderView} from './components/views/HeaderView.ts';
 import {EventEmitter} from './components/base/Events.ts';
 import {GalleryView} from './components/views/GalleryView.ts';
 import {CardCatalogView} from './components/views/Card/CardCatalogView.ts';
-import {IProduct} from './types';
+import {IProduct, TPayment} from './types';
 import {ModalView} from './components/views/ModalView.ts';
 import {CardPreviewView} from './components/views/Card/CardPreviewView.ts';
 import {BasketView} from './components/views/BasketView.ts';
 import {CardBasketView} from './components/views/Card/CardBasketView.ts';
+import {OrderFormView} from './components/views/Form/OrderFormView.ts';
+import {ContactsFormView} from './components/views/Form/ContactsFormView.ts';
 
 const productApi = new ProductApi(new Api(API_URL));
 const eventEmitter = new EventEmitter();
@@ -31,6 +33,8 @@ const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
+const contactsFormTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 
 
 const headerView = new HeaderView(headerElement, eventEmitter);
@@ -88,8 +92,32 @@ eventEmitter.on(eventNames.MODAL_CLOSE, () => {
     catalogModel.setCurrentItem(null);
 });
 
-eventEmitter.on(eventNames.BASKET_CHECKOUT, () => {
-    console.log('BASKET_CHECKOUT');
+[
+    eventNames.BASKET_CHECKOUT,
+    eventNames.CUSTOMER_SET_PAYMENT,
+    eventNames.CUSTOMER_SET_ADDRESS,
+].forEach((eventName) => {
+    eventEmitter.on(eventName, () => {
+        modalView.render({
+            content: renderOrderFormView(),
+        });
+    });
+});
+
+[
+    eventNames.ORDER_FORM_SUBMIT,
+    eventNames.CUSTOMER_SET_EMAIL,
+    eventNames.CUSTOMER_SET_PHONE,
+].forEach((eventName) => {
+    eventEmitter.on(eventName, () => {
+        modalView.render({
+            content: renderContactsFormView(),
+        });
+    });
+});
+
+eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, () => {
+    console.log('Отправка данных заказа и после успешной отправки показать окно с успехом');
 });
 
 
@@ -168,4 +196,58 @@ function renderCardCatalogView(item: IProduct): HTMLElement {
     );
 
     return cardCatalogView.render(item);
+}
+
+function renderOrderFormView(): HTMLElement {
+    const orderFormView = new OrderFormView(
+        cloneTemplate<HTMLFormElement>(orderFormTemplate),
+        {
+            onClickPayment: (payment: TPayment) => customerModel.setPayment(payment),
+            onInputAddress: (address: string) => customerModel.setAddress(address),
+            onSubmit: () => eventEmitter.emit(eventNames.ORDER_FORM_SUBMIT),
+        },
+    );
+
+    const {
+        payment,
+        address,
+    } = customerModel.getData();
+    const {
+        payment: paymentError,
+        address: addressError,
+    } = customerModel.checkValidity();
+    const error: string = paymentError || addressError || '';
+
+    return orderFormView.render({
+        payment,
+        address,
+        error,
+    });
+}
+
+function renderContactsFormView(): HTMLElement {
+    const contactsFormView = new ContactsFormView(
+        cloneTemplate<HTMLFormElement>(contactsFormTemplate),
+        {
+            onInputEmail: (email: string) => customerModel.setEmail(email),
+            onInputPhone: (phone: string) => customerModel.setPhone(phone),
+            onSubmit: () => eventEmitter.emit(eventNames.CONTACTS_FORM_SUBMIT),
+        },
+    );
+
+    const {
+        email,
+        phone,
+    } = customerModel.getData();
+    const {
+        email: emailError,
+        phone: phoneError,
+    } = customerModel.checkValidity();
+    const error: string = emailError || phoneError || '';
+
+    return contactsFormView.render({
+        email,
+        phone,
+        error,
+    });
 }

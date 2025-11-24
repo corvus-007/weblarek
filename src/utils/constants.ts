@@ -9,11 +9,11 @@ export const CDN_URL = `${import.meta.env.VITE_API_ORIGIN}/content/weblarek`;
 
 /* Константа соответствий категорий товара модификаторам, используемым для отображения фона категории. */
 export const categoryMap = {
-  'софт-скил': 'card__category_soft',
-  'хард-скил': 'card__category_hard',
-  'кнопка': 'card__category_button',
-  'дополнительное': 'card__category_additional',
-  'другое': 'card__category_other',
+    'софт-скил': 'card__category_soft',
+    'хард-скил': 'card__category_hard',
+    'кнопка': 'card__category_button',
+    'дополнительное': 'card__category_additional',
+    'другое': 'card__category_other',
 };
 
 export const settings = {};
@@ -32,6 +32,11 @@ export const eventNames = {
     CARD_ADD_TO_BASKET: 'card:addToBasket',
     MODAL_CLOSE: 'modal:close',
 
+    ORDER_FORM_SUBMIT: 'orderForm:submit',
+    CONTACTS_FORM_SUBMIT: 'contactForm:submit',
+
     CUSTOMER_SET_PAYMENT: 'customer:setPayment',
     CUSTOMER_SET_ADDRESS: 'customer:setAddress',
+    CUSTOMER_SET_PHONE: 'customer:setPhone',
+    CUSTOMER_SET_EMAIL: 'customer:setEmail',
 };

@@ -23,10 +23,12 @@ export class Customer {
 
     setPhone(phone: string): void {
         this.phone = phone;
+        this.events.emit<Pick<IBuyer, 'phone'>>(eventNames.CUSTOMER_SET_PHONE, {phone});
     }
 
     setEmail(email: string): void {
         this.email = email;
+        this.events.emit<Pick<IBuyer, 'email'>>(eventNames.CUSTOMER_SET_PHONE, {email});
     }
 
     getData(): IBuyer {
