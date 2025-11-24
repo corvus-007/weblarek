@@ -31,4 +31,7 @@ export const eventNames = {
     CARD_SELECT: 'card:select',
     CARD_ADD_TO_BASKET: 'card:addToBasket',
     MODAL_CLOSE: 'modal:close',
+
+    CUSTOMER_SET_PAYMENT: 'customer:setPayment',
+    CUSTOMER_SET_ADDRESS: 'customer:setAddress',
 };

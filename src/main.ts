@@ -21,7 +21,7 @@ const eventEmitter = new EventEmitter();
 
 const catalogModel = new Catalog(eventEmitter);
 const basketModel = new Basket(eventEmitter);
-const customerModel = new Customer();
+const customerModel = new Customer(eventEmitter);
 
 const headerElement = ensureElement<HTMLElement>('.header');
 const galleryElement = ensureElement<HTMLElement>('.gallery');

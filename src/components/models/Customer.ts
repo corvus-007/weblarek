@@ -1,4 +1,6 @@
 import {IBuyer, TBuyerValidityMessages, TPayment} from '../../types';
+import {eventNames} from '../../utils/constants.ts';
+import {IEvents} from '../base/Events.ts';
 
 export class Customer {
     private payment: TPayment = '';
@@ -6,12 +8,17 @@ export class Customer {
     private phone: string = '';
     private email: string = '';
 
+    constructor(protected readonly events: IEvents) {
+    }
+
     setPayment(payment: TPayment): void {
         this.payment = payment;
+        this.events.emit<Pick<IBuyer, 'payment'>>(eventNames.CUSTOMER_SET_PAYMENT, {payment});
     }
 
     setAddress(address: string): void {
         this.address = address;
+        this.events.emit<Pick<IBuyer, 'address'>>(eventNames.CUSTOMER_SET_ADDRESS, {address});
     }
 
     setPhone(phone: string): void {
