@@ -57,11 +57,11 @@ export class Customer {
         }
 
         if (!this.phone.trim()) {
-            errors.phone = 'Необходимо указать email';
+            errors.phone = 'Необходимо указать телефон';
         }
 
         if (!this.email.trim()) {
-            errors.email = 'Необходимо указать телефон';
+            errors.email = 'Необходимо указать email';
         }
 
         return errors;
