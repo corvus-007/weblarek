@@ -24,6 +24,7 @@ export const eventNames = {
     BASKET_OPEN: 'basket:open',
     BASKET_CHECKOUT: 'basket:checkout',
     BASKET_DELETE_ITEM: 'basket:deleteItem',
+    BASKET_CLEAR: 'basket:clear',
 
     CARD_PREVIEW_ADD_ITEM: 'cardPreview:addItem',
     CARD_BASKET_DELETE_ITEM: 'cardBasket:deleteItem',
@@ -39,4 +40,6 @@ export const eventNames = {
     CUSTOMER_SET_ADDRESS: 'customer:setAddress',
     CUSTOMER_SET_PHONE: 'customer:setPhone',
     CUSTOMER_SET_EMAIL: 'customer:setEmail',
+
+    SUCCESS_CLOSE: 'success:close',
 };

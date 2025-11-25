@@ -10,13 +10,14 @@ import {HeaderView} from './components/views/HeaderView.ts';
 import {EventEmitter} from './components/base/Events.ts';
 import {GalleryView} from './components/views/GalleryView.ts';
 import {CardCatalogView} from './components/views/Card/CardCatalogView.ts';
-import {IProduct, TPayment} from './types';
+import {IOrderApiResponse, IProduct, TPayment} from './types';
 import {ModalView} from './components/views/ModalView.ts';
 import {CardPreviewView} from './components/views/Card/CardPreviewView.ts';
 import {BasketView} from './components/views/BasketView.ts';
 import {CardBasketView} from './components/views/Card/CardBasketView.ts';
 import {OrderFormView} from './components/views/Form/OrderFormView.ts';
 import {ContactsFormView} from './components/views/Form/ContactsFormView.ts';
+import {OrderSuccessView} from './components/views/OrderSuccessView.ts';
 
 const productApi = new ProductApi(new Api(API_URL));
 const eventEmitter = new EventEmitter();
@@ -35,7 +36,7 @@ const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
 const contactsFormTemplate = ensureElement<HTMLTemplateElement>('#contacts');
-
+const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 const headerView = new HeaderView(headerElement, eventEmitter);
 const galleryView = new GalleryView(galleryElement);
@@ -80,6 +81,10 @@ eventEmitter.on(eventNames.BASKET_DELETE_ITEM, () => {
     renderHeaderView();
 });
 
+eventEmitter.on(eventNames.BASKET_CLEAR, () => {
+    renderHeaderView();
+});
+
 eventEmitter.on(eventNames.CARD_ADD_TO_BASKET, () => {
     const currentItem = catalogModel.getCurrentItem();
 
@@ -116,8 +121,30 @@ eventEmitter.on(eventNames.MODAL_CLOSE, () => {
     });
 });
 
-eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, () => {
-    console.log('Отправка данных заказа и после успешной отправки показать окно с успехом');
+eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {
+    try {
+        const response = await productApi.order({
+            ...customerModel.getData(),
+            total: basketModel.getTotalPrice(),
+            items: basketModel.getItems().map(({id}) => id),
+        });
+
+        modalView.render({
+            content: renderOrderSuccessView(response),
+        });
+    } catch (e: unknown) {
+        if (isErrorApiResponse(e)) {
+            console.error(e.error);
+        } else {
+            console.error(e);
+        }
+    }
+});
+
+eventEmitter.on(eventNames.SUCCESS_CLOSE, () => {
+    basketModel.clear();
+    customerModel.clear();
+    modalView.closeModal();
 });
 
 
@@ -128,7 +155,7 @@ try {
     if (isErrorApiResponse(e)) {
         console.error(e.error);
     } else {
-        console.log(e);
+        console.error(e);
     }
 }
 
@@ -249,5 +276,20 @@ function renderContactsFormView(): HTMLElement {
         email,
         phone,
         error,
+    });
+}
+
+function renderOrderSuccessView({total}: IOrderApiResponse) {
+    const orderSuccessView = new OrderSuccessView(
+        cloneTemplate<HTMLElement>(successTemplate),
+        {
+            onClose: () => {
+                eventEmitter.emit(eventNames.SUCCESS_CLOSE);
+            },
+        },
+    );
+
+    return orderSuccessView.render({
+        total,
     });
 }

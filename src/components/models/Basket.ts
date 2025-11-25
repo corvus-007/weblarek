@@ -24,6 +24,7 @@ export class Basket {
 
     clear(): void {
         this.items = [];
+        this.events.emit(eventNames.BASKET_CLEAR);
     }
 
     getTotalPrice(): number {
