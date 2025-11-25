@@ -9,7 +9,7 @@ type TBasketViewData = {
 };
 
 export class BasketView extends Component<TBasketViewData> {
-    protected readonly listElement: HTMLUListElement;
+    protected readonly listElem: HTMLUListElement;
     protected readonly btnElem: HTMLButtonElement;
     protected readonly priceElem: HTMLElement;
 
@@ -19,7 +19,7 @@ export class BasketView extends Component<TBasketViewData> {
     ) {
         super(container);
 
-        this.listElement = ensureElement<HTMLUListElement>('.basket__list', this.container);
+        this.listElem = ensureElement<HTMLUListElement>('.basket__list', this.container);
         this.btnElem = ensureElement<HTMLButtonElement>('.basket__button', this.container);
         this.priceElem = ensureElement<HTMLElement>('.basket__price', this.container);
 
@@ -29,7 +29,7 @@ export class BasketView extends Component<TBasketViewData> {
     }
 
     set items(items: HTMLElement[]) {
-        this.listElement.replaceChildren(...items);
+        this.listElem.replaceChildren(...items);
     }
 
     set total(total: number) {

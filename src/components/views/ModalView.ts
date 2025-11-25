@@ -7,23 +7,23 @@ interface IModalViewData {
 
 export class ModalView extends Component<IModalViewData> {
     protected readonly modalContentElem: HTMLElement;
-    protected readonly closeButtonElem: HTMLButtonElement;
+    protected readonly closeBtnElem: HTMLButtonElement;
 
     constructor(protected readonly container: HTMLElement) {
         super(container);
 
         this.modalContentElem = ensureElement<HTMLElement>('.modal__content', this.container);
-        this.closeButtonElem = ensureElement<HTMLButtonElement>('.modal__close', this.container);
+        this.closeBtnElem = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
-        this.closeButtonElem.addEventListener('click', (evt) => {
+        this.closeBtnElem.addEventListener('click', (evt) => {
             evt.preventDefault();
-            this.closeModal();
+            this.close();
         });
     }
 
     protected documentPressEscHandler = (evt: KeyboardEvent) => {
         if (evt.code === 'Escape') {
-            this.closeModal();
+            this.close();
         }
     };
 
@@ -32,22 +32,22 @@ export class ModalView extends Component<IModalViewData> {
         const currentTarget = evt.currentTarget as HTMLElement;
 
         if (target === currentTarget) {
-            this.closeModal();
+            this.close();
         }
     };
 
     protected set content(content: HTMLElement) {
         this.modalContentElem.replaceChildren(content);
-        this.showModal();
+        this.open();
     }
 
-    protected showModal() {
+    protected open() {
         this.container.classList.add('modal_active');
         document.addEventListener('keydown', this.documentPressEscHandler);
         this.container.addEventListener('click', this.modalClickHandler);
     }
 
-    closeModal() {
+    close() {
         this.container.classList.remove('modal_active');
         document.removeEventListener('keydown', this.documentPressEscHandler);
         this.container.removeEventListener('click', this.modalClickHandler);

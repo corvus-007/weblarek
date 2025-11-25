@@ -10,8 +10,8 @@ type TCardCatalogViewActions = {
 };
 
 export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
-    protected readonly categoryElement: HTMLElement;
-    protected readonly imageElement: HTMLImageElement;
+    protected readonly categoryElem: HTMLElement;
+    protected readonly imageElem: HTMLImageElement;
 
     constructor(
         protected readonly container: HTMLElement,
@@ -19,8 +19,8 @@ export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
     ) {
         super(container);
 
-        this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
-        this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
+        this.categoryElem = ensureElement<HTMLElement>('.card__category', this.container);
+        this.imageElem = ensureElement<HTMLImageElement>('.card__image', this.container);
 
         if (this.actions?.onClick) {
             this.container.addEventListener('click', (evt) => {
@@ -31,18 +31,17 @@ export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
     }
 
     set category(category: TCategoryNames) {
-        const CATEGORY_CLASS = 'card__category';
-        const categoryClassModifier = this.getCategoryClassByCategoryName(category);
+        const categoryClassModifier = CardCatalogView.getCategoryClassByCategoryName(category);
 
-        this.categoryElement.textContent = category;
-        this.categoryElement.className = `${CATEGORY_CLASS} ${categoryClassModifier}`;
+        this.categoryElem.textContent = category;
+        this.categoryElem.className = `card__category ${categoryClassModifier}`;
     }
 
     set image(imageSrc: string) {
-        this.setImage(this.imageElement, CDN_URL + imageSrc);
+        this.setImage(this.imageElem, CDN_URL + imageSrc);
     }
 
-    protected getCategoryClassByCategoryName(categoryName: TCategoryNames): string {
+    static getCategoryClassByCategoryName(categoryName: TCategoryNames): string {
         return categoryMap[categoryName];
     }
 }

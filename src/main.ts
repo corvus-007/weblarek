@@ -140,7 +140,7 @@ eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {
 eventEmitter.on(eventNames.SUCCESS_CLOSE, () => {
     basketModel.clear();
     customerModel.clear();
-    modalView.closeModal();
+    modalView.close();
 });
 
 
@@ -196,7 +196,7 @@ function renderCardPreviewView(item: IProduct): HTMLElement {
                     basketModel.deleteItem(item);
                 }
 
-                modalView.closeModal();
+                modalView.close();
             },
         },
     );

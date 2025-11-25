@@ -4,23 +4,23 @@ import {ensureElement} from '../../../utils/utils.ts';
 
 type TCardViewData = Pick<IProduct, 'title' | 'price'>;
 
-export class CardView<T> extends Component<T & TCardViewData> {
-    protected readonly titleElement: HTMLElement;
-    protected readonly priceElement: HTMLElement;
+export class CardView<T> extends Component<TCardViewData & T> {
+    protected readonly titleElem: HTMLElement;
+    protected readonly priceElem: HTMLElement;
 
     constructor(protected readonly container: HTMLElement) {
         super(container);
 
-        this.titleElement = ensureElement<HTMLElement>('.card__title', this.container);
-        this.priceElement = ensureElement<HTMLElement>('.card__price', this.container);
+        this.titleElem = ensureElement<HTMLElement>('.card__title', this.container);
+        this.priceElem = ensureElement<HTMLElement>('.card__price', this.container);
     }
 
     set title(title: string) {
-        this.titleElement.textContent = title;
+        this.titleElem.textContent = title;
     }
 
     set price(price: number | null) {
-        this.priceElement.textContent = price
+        this.priceElem.textContent = price
             ? `${price} синапсов`
             : 'Бесценно';
     }

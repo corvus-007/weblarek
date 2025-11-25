@@ -238,3 +238,119 @@ interface IBuyer {
 - `getProducts(): Promise<IGetProductsApiResponse>` - получает с сервера объект с массивом товаров
 - `order(data: IOrderApiRequest): Promise<IOrderApiResponse>` - отправляет на сервер данные о покупателе и выбранных
   товарах
+
+### Представление
+
+Все классы представления наследуются от родительского класса `Component`.
+
+#### `HeaderView`
+
+**Назначение:** шапка сайта с кнопкой корзины.  
+**Конструктор:**  
+`constructor(container: HTMLElement, events: IEvents)`  
+— принимает контейнер и брокер событий, навешивает обработчик клика на кнопку корзины.
+
+**Свойства:**
+
+- `htmlButtonElement` — кнопка корзины
+- `basketCounterElement` — счетчик количества товаров
+
+**Методы:**
+
+- `set count(value: number)` — обновляет число товаров рядом с иконкой корзины
+
+### `ModalView`
+
+**Назначение:** диалоговое окно для отображения контента.  
+**Конструктор:**  
+`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и объект событий.
+
+**Свойства:**
+
+- `modalContentElem` — область для вставки контента
+- `closeBtnElem` — кнопка закрытия диалогового окна
+
+**Методы:**
+
+- `documentPressEscHandler(evt: KeyboardEvent)` - обработчик нажатия клавиши `Esc`
+- `modalClickHandler(evt: MouseEvent)` - обработчик клика вне области
+  содержимого окна
+- `set content(content: HTMLElement)` - контейнер для отображения контента
+- `open()` — открывает диалоговое окно и устанавливает обработчики события на закрытие окна по клику вне области
+  содержимого окна и нажатии клавиши `Esc`
+- `close()` — закрывает диалоговое окно и удаляет обработчики события
+
+#### `GalleryView`
+
+**Назначение:** контейнер для карточек товаров.  
+**Конструктор:**  
+`constructor(container: HTMLElement)` — задает контейнер.
+
+**Методы:**
+
+- `set items(catalogItems: HTMLElement[])` — вставляет карточки товаров в контейнер
+
+#### `CardView`
+
+**Назначение:** Базовый класс карточки товара.  
+**Конструктор:**  
+`constructor(container: HTMLElement)` — принимает контейнер.
+
+**Свойства:**
+
+- `titleElem` — заголовок товара
+- `priceElem` — цена товара
+
+**Методы:**
+
+- `set title(value: string)` — устанавливает название
+- `set price(value: string)` — устанавливает цену
+
+#### `CardBasketView`
+
+**Назначение:** Карточки товара в корзине. `CardView <- CardBasketView`  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions?: TActions)` — принимает контейнер и объект событий
+
+**Свойства:**
+
+- `indexElem: HTMLSpanElement` — порядковый номер в корзине
+- `btnElem: HTMLButtonElement` — кнопка удаления товара из корзины
+
+**Методы:**
+
+- `set index(index: number)` — устанавливает порядковый номер
+
+#### `CardCatalogView`
+
+**Назначение:** Карточки товара в каталоге. `CardView <- CardBasketView <- CardCatalogView`  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions?: TActions)` — принимает контейнер и объект событий
+
+**Свойства:**
+
+- `categoryElem: HTMLElement` — категория товара
+- `imageElem: HTMLImageElement` — изображение товара
+
+**Методы:**
+
+- `set category(category: TCategoryNames)` — задает категорию и соответствующий модификатор
+- `set image(imageSrc: string)` — устанавливает адрес изображения товара
+- `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в соответствии с категорией товара
+
+#### `BasketView`
+
+**Назначение:** Корзина.  
+**Конструктор:**  
+`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и брокер событий.
+
+**Свойства:**
+
+- `listElem` — контейнер для отображения списка товаров
+- `btnElem` — кнопка оформления товаров из корзины
+- `priceElem` — итоговая сумма
+
+**Методы:**
+
+- `set items(value: HTMLElement[])` — рендерит список товаров
+- `set total(value: number)` — обновляет итоговую сумму  
