@@ -22,8 +22,11 @@ export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
         this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
         this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
 
-        if (actions?.onClick) {
-            this.container.addEventListener('click', actions.onClick);
+        if (this.actions?.onClick) {
+            this.container.addEventListener('click', (evt) => {
+                evt.preventDefault();
+                this.actions?.onClick?.();
+            });
         }
     }
 

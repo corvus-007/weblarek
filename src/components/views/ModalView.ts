@@ -1,7 +1,5 @@
 import {Component} from '../base/Component.ts';
 import {ensureElement} from '../../utils/utils.ts';
-import {IEvents} from '../base/Events.ts';
-import {eventNames} from '../../utils/constants.ts';
 
 interface IModalViewData {
     content: HTMLElement;
@@ -11,17 +9,14 @@ export class ModalView extends Component<IModalViewData> {
     protected readonly modalContentElem: HTMLElement;
     protected readonly closeButtonElem: HTMLButtonElement;
 
-    constructor(
-        protected readonly container: HTMLElement,
-        protected readonly events: IEvents,
-    ) {
+    constructor(protected readonly container: HTMLElement) {
         super(container);
 
         this.modalContentElem = ensureElement<HTMLElement>('.modal__content', this.container);
         this.closeButtonElem = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
-        this.closeButtonElem.addEventListener('click', () => {
-            events.emit(eventNames.MODAL_CLOSE);
+        this.closeButtonElem.addEventListener('click', (evt) => {
+            evt.preventDefault();
             this.closeModal();
         });
     }

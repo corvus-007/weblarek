@@ -24,13 +24,9 @@ export class Catalog {
         return this.items.find(({id}) => id === itemId) ?? null;
     }
 
-    setCurrentItem(item: IProduct | null): void {
+    setCurrentItem(item: IProduct): void {
         this.currentItem = item;
-        if (item) {
-            this.events.emit<IProduct>('product:setCurrent', item);
-        } else {
-            this.events.emit('product:resetCurrent');
-        }
+        this.events.emit<IProduct>(eventNames.CATALOG_SET_ITEM, item);
     }
 
     getCurrentItem(): IProduct | null {

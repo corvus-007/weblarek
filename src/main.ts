@@ -26,9 +26,9 @@ const catalogModel = new Catalog(eventEmitter);
 const basketModel = new Basket(eventEmitter);
 const customerModel = new Customer(eventEmitter);
 
-const headerElement = ensureElement<HTMLElement>('.header');
-const galleryElement = ensureElement<HTMLElement>('.gallery');
-const modalElement = ensureElement<HTMLTemplateElement>('#modal-container');
+const headerElem = ensureElement<HTMLElement>('.header');
+const galleryElem = ensureElement<HTMLElement>('.gallery');
+const modalElem = ensureElement<HTMLTemplateElement>('#modal-container');
 
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
@@ -38,9 +38,18 @@ const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
 const contactsFormTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
-const headerView = new HeaderView(headerElement, eventEmitter);
-const galleryView = new GalleryView(galleryElement);
-const modalView = new ModalView(modalElement, eventEmitter);
+const headerView = new HeaderView(headerElem, eventEmitter);
+const galleryView = new GalleryView(galleryElem);
+const modalView = new ModalView(modalElem);
+const basketView = new BasketView(cloneTemplate(basketTemplate), eventEmitter);
+const orderSuccessView = new OrderSuccessView(
+    cloneTemplate<HTMLElement>(successTemplate),
+    {
+        onClose: () => {
+            eventEmitter.emit(eventNames.SUCCESS_CLOSE);
+        },
+    },
+);
 
 
 eventEmitter.on<IProduct[]>(eventNames.CATALOG_SET_ITEMS, (items) => {
@@ -53,21 +62,18 @@ eventEmitter.on<IProduct[]>(eventNames.CATALOG_SET_ITEMS, (items) => {
 
 eventEmitter.on<IProduct>(eventNames.CARD_SELECT, (item) => {
     catalogModel.setCurrentItem(item);
+});
 
+eventEmitter.on<IProduct>(eventNames.CATALOG_SET_ITEM, item => {
     modalView.render({
         content: renderCardPreviewView(item),
     });
-});
+})
 
 eventEmitter.on(eventNames.BASKET_OPEN, () => {
     modalView.render({
         content: renderBasketView(),
     });
-});
-
-eventEmitter.on(eventNames.CARD_PREVIEW_ADD_ITEM, () => {
-    renderHeaderView();
-    modalView.closeModal();
 });
 
 eventEmitter.on<IProduct>(eventNames.CARD_BASKET_DELETE_ITEM, (item) => {
@@ -77,24 +83,14 @@ eventEmitter.on<IProduct>(eventNames.CARD_BASKET_DELETE_ITEM, (item) => {
     });
 });
 
-eventEmitter.on(eventNames.BASKET_DELETE_ITEM, () => {
-    renderHeaderView();
-});
-
-eventEmitter.on(eventNames.BASKET_CLEAR, () => {
-    renderHeaderView();
-});
-
-eventEmitter.on(eventNames.CARD_ADD_TO_BASKET, () => {
-    const currentItem = catalogModel.getCurrentItem();
-
-    if (currentItem) {
-        basketModel.addItem(currentItem);
-    }
-});
-
-eventEmitter.on(eventNames.MODAL_CLOSE, () => {
-    catalogModel.setCurrentItem(null);
+[
+    eventNames.BASKET_ADD_ITEM,
+    eventNames.BASKET_DELETE_ITEM,
+    eventNames.BASKET_CLEAR,
+].forEach((eventName) => {
+    eventEmitter.on(eventName, () => {
+        renderHeaderView();
+    });
 });
 
 [
@@ -166,7 +162,6 @@ function renderHeaderView(): HTMLElement {
 }
 
 function renderBasketView(): HTMLElement {
-    const basketView = new BasketView(cloneTemplate(basketTemplate), eventEmitter);
     const basketItems = basketModel.getItems().map(renderCardBasketView);
 
     return basketView.render({
@@ -207,8 +202,8 @@ function renderCardPreviewView(item: IProduct): HTMLElement {
     );
 
     return cardPreviewView.render({
-        ...item,
         isInBasket: basketModel.hasItem(item.id),
+        ...item,
     });
 }
 
@@ -280,15 +275,6 @@ function renderContactsFormView(): HTMLElement {
 }
 
 function renderOrderSuccessView({total}: IOrderApiResponse) {
-    const orderSuccessView = new OrderSuccessView(
-        cloneTemplate<HTMLElement>(successTemplate),
-        {
-            onClose: () => {
-                eventEmitter.emit(eventNames.SUCCESS_CLOSE);
-            },
-        },
-    );
-
     return orderSuccessView.render({
         total,
     });

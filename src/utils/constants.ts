@@ -19,19 +19,19 @@ export const categoryMap = {
 export const settings = {};
 
 export const eventNames = {
+    CATALOG_SET_ITEM: 'catalog:setItem',
     CATALOG_SET_ITEMS: 'catalog:setItems',
 
     BASKET_OPEN: 'basket:open',
     BASKET_CHECKOUT: 'basket:checkout',
+    BASKET_ADD_ITEM: 'basket:addItem',
     BASKET_DELETE_ITEM: 'basket:deleteItem',
     BASKET_CLEAR: 'basket:clear',
 
-    CARD_PREVIEW_ADD_ITEM: 'cardPreview:addItem',
     CARD_BASKET_DELETE_ITEM: 'cardBasket:deleteItem',
 
     CARD_SELECT: 'card:select',
     CARD_ADD_TO_BASKET: 'card:addToBasket',
-    MODAL_CLOSE: 'modal:close',
 
     ORDER_FORM_SUBMIT: 'orderForm:submit',
     CONTACTS_FORM_SUBMIT: 'contactForm:submit',

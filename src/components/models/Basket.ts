@@ -14,7 +14,7 @@ export class Basket {
 
     addItem(item: IProduct): void {
         this.items.push(item);
-        this.events.emit(eventNames.CARD_PREVIEW_ADD_ITEM);
+        this.events.emit(eventNames.BASKET_ADD_ITEM);
     }
 
     deleteItem(itemToDelete: IProduct): void {
