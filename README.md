@@ -421,3 +421,18 @@ interface IBuyer {
 
 - `set email(email: string)` — заполняет инпут с почтой
 - `set phone(phone: string)` — заполняет инпут с телефоном
+
+#### `OrderSuccessView`
+
+**Назначение:** Сообщение об успешной оплате  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions: TOrderSuccessViewActions)` — принимает контейнер и объект с действиями
+
+**Свойства:**
+
+- `descriptionElem: HTMLParagraphElement` — элемент отображает, на какую сумму был оформлен заказ
+- `closeBtnElem: HTMLButtonElement` — кнопка закрытия
+
+**Методы:**
+
+- `set total(total: number)` — устанавливает общую сумму заказа
