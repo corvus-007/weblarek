@@ -338,6 +338,23 @@ interface IBuyer {
 - `set image(imageSrc: string)` — устанавливает адрес изображения товара
 - `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в соответствии с категорией товара
 
+#### `CardPreviewView`
+
+**Назначение:** Карточки товара в каталоге. `CardView <- CardBasketView <- CardCatalogView <- CardPreviewView`  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions?: TActions)` — принимает контейнер и объект событий
+
+**Свойства:**
+
+- `descriptionElement: HTMLParagraphElement` — описание товара
+- `buttonElement: HTMLButtonElement` — кнопка добавления или удаления товара из корзины
+
+**Методы:**
+
+- `set isInBasket(isInBasket: boolean)` — задает название кнопки `Удалить из корзины` / `В корзину` от наличия товара в корзине
+- `set description(description: string)` — устанавливает описание товара
+- `set price(price: number | null)` - блокирует кнопку добавления товара в корзину и изменяет текст с ценой на `Недоступно`, если нет цены
+
 #### `BasketView`
 
 **Назначение:** Корзина.  

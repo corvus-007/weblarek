@@ -29,7 +29,6 @@ export const eventNames = {
     BASKET_CLEAR: 'basket:clear',
 
     CARD_BASKET_DELETE_ITEM: 'cardBasket:deleteItem',
-
     CARD_SELECT: 'card:select',
     CARD_ADD_TO_BASKET: 'card:addToBasket',
 
