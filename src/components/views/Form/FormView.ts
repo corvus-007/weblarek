@@ -5,7 +5,7 @@ type TFormViewData = {
     error: string;
 };
 type TFormViewActions = {
-    onSubmit: () => void;
+    onSubmit?: () => void;
 }
 
 export class FormView<T> extends Component<T & TFormViewData> {
@@ -14,7 +14,7 @@ export class FormView<T> extends Component<T & TFormViewData> {
 
     constructor(
         protected readonly container: HTMLFormElement,
-        protected readonly actions: TFormViewActions,
+        protected readonly actions?: TFormViewActions,
     ) {
         super(container);
 
@@ -24,7 +24,7 @@ export class FormView<T> extends Component<T & TFormViewData> {
         if (this.actions?.onSubmit) {
             this.container.addEventListener('submit', (evt) => {
                 evt.preventDefault();
-                this.actions.onSubmit();
+                this.actions?.onSubmit?.();
             });
         }
     }

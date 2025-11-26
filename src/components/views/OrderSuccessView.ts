@@ -4,7 +4,7 @@ import {IOrderApiResponse} from '../../types';
 
 type TOrderSuccessViewData = Pick<IOrderApiResponse, 'total'>;
 type TOrderSuccessViewActions = {
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 export class OrderSuccessView extends Component<TOrderSuccessViewData> {
@@ -13,17 +13,17 @@ export class OrderSuccessView extends Component<TOrderSuccessViewData> {
 
     constructor(
         protected readonly container: HTMLElement,
-        protected readonly actions: TOrderSuccessViewActions,
+        protected readonly actions?: TOrderSuccessViewActions,
     ) {
         super(container);
 
         this.descriptionElem = ensureElement<HTMLParagraphElement>('.order-success__description', this.container);
         this.closeBtnElem = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
 
-        if (this.actions.onClose) {
+        if (this.actions?.onClose) {
             this.closeBtnElem.addEventListener('click', evt => {
                 evt.preventDefault();
-                this.actions.onClose();
+                this.actions?.onClose?.();
             });
         }
     }
