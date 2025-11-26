@@ -259,7 +259,7 @@ interface IBuyer {
 
 - `set count(value: number)` — обновляет число товаров рядом с иконкой корзины
 
-### `ModalView`
+#### `ModalView`
 
 **Назначение:** диалоговое окно для отображения контента.  
 **Конструктор:**  
@@ -298,8 +298,8 @@ interface IBuyer {
 
 **Свойства:**
 
-- `titleElem` — заголовок товара
-- `priceElem` — цена товара
+- `titleElem: HTMLElement` — заголовок товара
+- `priceElem: HTMLElement` — цена товара
 
 **Методы:**
 
@@ -336,7 +336,8 @@ interface IBuyer {
 
 - `set category(category: TCategoryNames)` — задает категорию и соответствующий модификатор
 - `set image(imageSrc: string)` — устанавливает адрес изображения товара
-- `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в соответствии с категорией товара
+- `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в
+  соответствии с категорией товара
 
 #### `CardPreviewView`
 
@@ -351,9 +352,11 @@ interface IBuyer {
 
 **Методы:**
 
-- `set isInBasket(isInBasket: boolean)` — задает название кнопки `Удалить из корзины` / `В корзину` от наличия товара в корзине
+- `set isInBasket(isInBasket: boolean)` — задает название кнопки `Удалить из корзины` / `В корзину` от наличия товара в
+  корзине
 - `set description(description: string)` — устанавливает описание товара
-- `set price(price: number | null)` - блокирует кнопку добавления товара в корзину и изменяет текст с ценой на `Недоступно`, если нет цены
+- `set price(price: number | null)` - блокирует кнопку добавления товара в корзину и изменяет текст с ценой на
+  `Недоступно`, если нет цены
 
 #### `BasketView`
 
@@ -370,4 +373,51 @@ interface IBuyer {
 **Методы:**
 
 - `set items(value: HTMLElement[])` — рендерит список товаров
-- `set total(value: number)` — обновляет итоговую сумму  
+- `set total(value: number)` — обновляет итоговую сумму
+
+#### `FormView`
+
+**Назначение:** Базовый класс формы.  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions: TFormViewActions)` — принимает контейнер и объект с действиями
+
+**Свойства:**
+
+- `submitBtnElem: HTMLButtonElement` — кнопка отправки формы
+- `errorsElem: HTMLElement` — элемент для вывода ошибки
+
+**Методы:**
+
+- `set error(error: string)` — устанавливает ошибку
+
+#### `OrderFormView`
+
+**Назначение:** Первый шаг оформления заказа. `FormView <- OrderFormView`  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions: TOrderFormViewActions)` — принимает контейнер и объект с действиями
+
+**Свойства:**
+
+- `paymentBtnElems: HTMLButtonElement[]` — кнопка выбора способа оплаты
+- `addressInputElem: HTMLInputElement` — инпут ввода адреса
+
+**Методы:**
+
+- `set payment(payment: TPayment)` — делает активной кнопку выбора оплаты
+- `set address(address: string)` — заполняет инпут с адресом
+
+#### `ContactsFormView`
+
+**Назначение:** Второй шаг оформления заказа. `FormView <- ContactsFormView`  
+**Конструктор:**  
+`constructor(container: HTMLElement, actions: TContactsFormViewActions)` — принимает контейнер и объект с действиями
+
+**Свойства:**
+
+- `emailInputElem: HTMLInputElement` — инпут ввода почты
+- `phoneInputElem: HTMLInputElement` — инпут ввода телефона
+
+**Методы:**
+
+- `set email(email: string)` — заполняет инпут с почтой
+- `set phone(phone: string)` — заполняет инпут с телефоном
