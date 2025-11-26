@@ -19,8 +19,8 @@ export const categoryMap = {
 export const settings = {};
 
 export const eventNames = {
-    CATALOG_SET_ITEM: 'catalog:setItem',
     CATALOG_SET_ITEMS: 'catalog:setItems',
+    CATALOG_SET_CURRENT_ITEM: 'catalog:setCurrentItem',
 
     BASKET_OPEN: 'basket:open',
     BASKET_CHECKOUT: 'basket:checkout',

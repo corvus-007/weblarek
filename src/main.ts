@@ -64,7 +64,7 @@ eventEmitter.on<IProduct>(eventNames.CARD_SELECT, (item) => {
     catalogModel.setCurrentItem(item);
 });
 
-eventEmitter.on<IProduct>(eventNames.CATALOG_SET_ITEM, item => {
+eventEmitter.on<IProduct>(eventNames.CATALOG_SET_CURRENT_ITEM, item => {
     modalView.render({
         content: renderCardPreviewView(item),
     });

@@ -26,7 +26,7 @@ export class Catalog {
 
     setCurrentItem(item: IProduct): void {
         this.currentItem = item;
-        this.events.emit<IProduct>(eventNames.CATALOG_SET_ITEM, item);
+        this.events.emit<IProduct>(eventNames.CATALOG_SET_CURRENT_ITEM, item);
     }
 
     getCurrentItem(): IProduct | null {
