@@ -18,13 +18,9 @@ export class ModalView extends Component<IModalViewData> {
         this.closeBtnElem.addEventListener('click', () => {
             this.close();
         });
-    }
 
-    protected documentPressEscHandler = (evt: KeyboardEvent) => {
-        if (evt.code === 'Escape') {
-            this.close();
-        }
-    };
+        this.container.addEventListener('click', this.modalClickHandler);
+    }
 
     protected modalClickHandler = (evt: MouseEvent) => {
         const target = evt.target as HTMLElement;
@@ -42,13 +38,9 @@ export class ModalView extends Component<IModalViewData> {
 
     protected open() {
         this.container.classList.add('modal_active');
-        document.addEventListener('keydown', this.documentPressEscHandler);
-        this.container.addEventListener('click', this.modalClickHandler);
     }
 
     close() {
         this.container.classList.remove('modal_active');
-        document.removeEventListener('keydown', this.documentPressEscHandler);
-        this.container.removeEventListener('click', this.modalClickHandler);
     }
 }
