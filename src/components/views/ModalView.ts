@@ -15,8 +15,7 @@ export class ModalView extends Component<IModalViewData> {
         this.modalContentElem = ensureElement<HTMLElement>('.modal__content', this.container);
         this.closeBtnElem = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
-        this.closeBtnElem.addEventListener('click', (evt) => {
-            evt.preventDefault();
+        this.closeBtnElem.addEventListener('click', () => {
             this.close();
         });
     }

@@ -20,8 +20,8 @@ export class CardPreviewView extends CardCatalogView<TCardPreviewViewData> {
         this.descriptionElement = ensureElement<HTMLParagraphElement>('.card__text', this.container);
         this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-        if (actions?.onClick) {
-            this.buttonElement.addEventListener('click', actions.onClick);
+        if (this.actions?.onClick) {
+            this.buttonElement.addEventListener('click', this.actions.onClick);
         }
     }
 

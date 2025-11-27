@@ -21,8 +21,8 @@ export class CardBasketView extends CardView<TCardBasketViewData> {
         this.indexElem = ensureElement<HTMLSpanElement>('.basket__item-index', this.container);
         this.btnElem = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-        if (actions?.onClick) {
-            this.btnElem.addEventListener('click', actions.onClick);
+        if (this.actions?.onClick) {
+            this.btnElem.addEventListener('click', this.actions.onClick);
         }
     }
 

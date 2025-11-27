@@ -21,10 +21,7 @@ export class OrderSuccessView extends Component<TOrderSuccessViewData> {
         this.closeBtnElem = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
 
         if (this.actions?.onClose) {
-            this.closeBtnElem.addEventListener('click', evt => {
-                evt.preventDefault();
-                this.actions?.onClose?.();
-            });
+            this.closeBtnElem.addEventListener('click', this.actions.onClose);
         }
     }
 
