@@ -13,7 +13,7 @@ export class Catalog {
 
     setItems(items: IProduct[]): void {
         this.items = items;
-        this.events.emit(eventNames.CATALOG_SET_ITEMS, [...this.items]);
+        this.events.emit(eventNames.CATALOG_SET_ITEMS);
     }
 
     getItems(): IProduct[] {
@@ -26,7 +26,7 @@ export class Catalog {
 
     setCurrentItem(item: IProduct): void {
         this.currentItem = item;
-        this.events.emit<IProduct>(eventNames.CATALOG_SET_CURRENT_ITEM, item);
+        this.events.emit(eventNames.CATALOG_SET_CURRENT_ITEM);
     }
 
     getCurrentItem(): IProduct | null {

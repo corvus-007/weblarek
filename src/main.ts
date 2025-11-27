@@ -52,23 +52,29 @@ const orderSuccessView = new OrderSuccessView(
 );
 
 
-eventEmitter.on<IProduct[]>(eventNames.CATALOG_SET_ITEMS, (items) => {
-    const catalogCards: HTMLElement[] = items.map(renderCardCatalogView);
+eventEmitter.on(eventNames.CATALOG_SET_ITEMS, () => {
+    const catalogCards: HTMLElement[] = catalogModel.getItems().map(renderCardCatalogView);
 
     galleryView.render({
         items: catalogCards,
     });
 });
 
-eventEmitter.on<IProduct>(eventNames.CARD_SELECT, (item) => {
+eventEmitter.on<IProduct>(eventNames.CARD_CATALOG_SELECTED, (item) => {
     catalogModel.setCurrentItem(item);
 });
 
-eventEmitter.on<IProduct>(eventNames.CATALOG_SET_CURRENT_ITEM, item => {
+eventEmitter.on(eventNames.CATALOG_SET_CURRENT_ITEM, () => {
+    const currentItem: IProduct | null = catalogModel.getCurrentItem();
+
+    if (!currentItem) {
+        return;
+    }
+
     modalView.render({
-        content: renderCardPreviewView(item),
+        content: renderCardPreviewView(currentItem),
     });
-})
+});
 
 eventEmitter.on(eventNames.BASKET_OPEN, () => {
     modalView.render({
@@ -208,7 +214,7 @@ function renderCardCatalogView(item: IProduct): HTMLElement {
         cloneTemplate<HTMLTemplateElement>(cardCatalogTemplate),
         {
             onClick: () => {
-                eventEmitter.emit(eventNames.CARD_SELECT, item);
+                eventEmitter.emit(eventNames.CARD_CATALOG_SELECTED, item);
             },
         },
     );
