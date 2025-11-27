@@ -13,22 +13,22 @@ export class Customer {
 
     setPayment(payment: TPayment): void {
         this.payment = payment;
-        this.events.emit<Pick<IBuyer, 'payment'>>(eventNames.CUSTOMER_SET_PAYMENT, {payment});
+        this.events.emit(eventNames.CUSTOMER_SET_PAYMENT);
     }
 
     setAddress(address: string): void {
         this.address = address;
-        this.events.emit<Pick<IBuyer, 'address'>>(eventNames.CUSTOMER_SET_ADDRESS, {address});
+        this.events.emit(eventNames.CUSTOMER_SET_ADDRESS);
     }
 
     setPhone(phone: string): void {
         this.phone = phone;
-        this.events.emit<Pick<IBuyer, 'phone'>>(eventNames.CUSTOMER_SET_PHONE, {phone});
+        this.events.emit(eventNames.CUSTOMER_SET_PHONE);
     }
 
     setEmail(email: string): void {
         this.email = email;
-        this.events.emit<Pick<IBuyer, 'email'>>(eventNames.CUSTOMER_SET_PHONE, {email});
+        this.events.emit(eventNames.CUSTOMER_SET_EMAIL);
     }
 
     getData(): IBuyer {
@@ -45,6 +45,8 @@ export class Customer {
         this.address = '';
         this.phone = '';
         this.email = '';
+
+        this.events.emit(eventNames.CUSTOMER_CLEAR_DATA);
     }
 
     checkValidity(): TBuyerValidityMessages {
