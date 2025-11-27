@@ -19,7 +19,7 @@ export class Basket {
 
     deleteItem(itemToDelete: IProduct): void {
         this.items = this.items.filter(({id}) => id !== itemToDelete.id);
-        this.events.emit(eventNames.BASKET_DELETE_ITEM, itemToDelete);
+        this.events.emit(eventNames.BASKET_DELETE_ITEM);
     }
 
     clear(): void {
