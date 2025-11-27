@@ -46,7 +46,7 @@ const orderSuccessView = new OrderSuccessView(
     cloneTemplate<HTMLElement>(successTemplate),
     {
         onClose: () => {
-            eventEmitter.emit(eventNames.SUCCESS_CLOSE);
+            modalView.close();
         },
     },
 );
@@ -125,6 +125,9 @@ eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {
             items: basketModel.getItems().map(({id}) => id),
         });
 
+        basketModel.clear();
+        customerModel.clear();
+
         modalView.render({
             content: renderOrderSuccessView(response),
         });
@@ -136,13 +139,6 @@ eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {
         }
     }
 });
-
-eventEmitter.on(eventNames.SUCCESS_CLOSE, () => {
-    basketModel.clear();
-    customerModel.clear();
-    modalView.close();
-});
-
 
 try {
     const products = await productApi.getProducts();
