@@ -1,13 +1,10 @@
 import {FormView} from './FormView.ts';
 import {IBuyer} from '../../../types';
 import {ensureElement} from '../../../utils/utils.ts';
+import {IEvents} from '../../base/Events.ts';
+import {eventNames} from '../../../utils/constants.ts';
 
 type TContactsFormViewData = Pick<IBuyer, 'email' | 'phone'>;
-type TContactsFormViewActions = {
-    onInputEmail?: (value: string) => void;
-    onInputPhone?: (value: string) => void;
-    onSubmit?: () => void;
-};
 
 export class ContactsFormView extends FormView<TContactsFormViewData> {
     protected readonly emailInputElem: HTMLInputElement;
@@ -15,24 +12,29 @@ export class ContactsFormView extends FormView<TContactsFormViewData> {
 
     constructor(
         protected readonly container: HTMLFormElement,
-        protected readonly actions?: TContactsFormViewActions,
+        protected readonly events: IEvents,
     ) {
-        super(container, actions);
+        super(container);
 
         this.emailInputElem = ensureElement<HTMLInputElement>('input[name="email"]', this.container);
         this.phoneInputElem = ensureElement<HTMLInputElement>('input[name="phone"]', this.container);
 
-        if (this.actions?.onInputEmail) {
-            this.emailInputElem.addEventListener('change', () => {
-                this.actions?.onInputEmail?.(this.emailInputElem.value);
+        this.emailInputElem.addEventListener('input', () => {
+            this.events.emit<Pick<IBuyer, 'email'>>(eventNames.CONTACTS_FORM_SET_EMAIL, {
+                email: this.emailInputElem.value,
             });
-        }
+        });
 
-        if (this.actions?.onInputPhone) {
-            this.phoneInputElem.addEventListener('change', () => {
-                this.actions?.onInputPhone?.(this.phoneInputElem.value);
+        this.phoneInputElem.addEventListener('input', () => {
+            this.events.emit<Pick<IBuyer, 'phone'>>(eventNames.CONTACTS_FORM_SET_PHONE, {
+                phone: this.phoneInputElem.value,
             });
-        }
+        });
+
+        this.container.addEventListener('submit', (evt: SubmitEvent) => {
+            evt.preventDefault();
+            this.events.emit(eventNames.CONTACTS_FORM_SUBMIT);
+        });
     }
 
     set email(email: string) {

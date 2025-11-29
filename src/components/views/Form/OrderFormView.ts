@@ -1,13 +1,10 @@
 import {FormView} from './FormView.ts';
 import {IBuyer, TPayment} from '../../../types';
 import {ensureAllElements, ensureElement} from '../../../utils/utils.ts';
+import {IEvents} from '../../base/Events.ts';
+import {eventNames} from '../../../utils/constants.ts';
 
 type TOrderFormViewData = Pick<IBuyer, 'payment' | 'address'>
-type TOrderFormViewActions = {
-    onClickPayment: (payment: TPayment) => void;
-    onInputAddress: (value: string) => void;
-    onSubmit: () => void;
-};
 
 export class OrderFormView extends FormView<TOrderFormViewData> {
     protected readonly paymentBtnElems: HTMLButtonElement[];
@@ -15,9 +12,9 @@ export class OrderFormView extends FormView<TOrderFormViewData> {
 
     constructor(
         protected readonly container: HTMLFormElement,
-        protected readonly actions: TOrderFormViewActions,
+        protected readonly events: IEvents,
     ) {
-        super(container, actions);
+        super(container);
 
         this.paymentBtnElems = ensureAllElements<HTMLButtonElement>('.button_alt', this.container);
         this.addressInputElem = ensureElement<HTMLInputElement>('input[name="address"]', this.container);
@@ -25,20 +22,31 @@ export class OrderFormView extends FormView<TOrderFormViewData> {
         this.paymentBtnElems.forEach((btnElem: HTMLButtonElement) => {
             btnElem.addEventListener('click', (evt) => {
                 const target = evt.target as HTMLButtonElement;
-                const btnName = target.name as TPayment;
+                const payment = target.name as TPayment;
 
-                actions.onClickPayment(btnName);
+                this.events.emit<Pick<IBuyer, 'payment'>>(eventNames.ORDER_FORM_SET_PAYMENT, {
+                    payment,
+                });
             });
         });
 
-        this.addressInputElem.addEventListener('change', () => {
-            this.actions.onInputAddress(this.addressInputElem.value);
-        })
+        this.addressInputElem.addEventListener('input', () => {
+            this.events.emit<Pick<IBuyer, 'address'>>(eventNames.ORDER_FORM_SET_ADDRESS, {
+                address: this.addressInputElem.value,
+            });
+        });
+
+        this.container.addEventListener('submit', (evt: SubmitEvent) => {
+            evt.preventDefault();
+            this.events.emit(eventNames.ORDER_FORM_SUBMIT);
+        });
     }
 
     set payment(payment: TPayment) {
         this.paymentBtnElems.forEach((btnElem: HTMLButtonElement) => {
+            btnElem.classList.remove('button_alt-active');
             const btnName = btnElem.name as TPayment;
+
             if (btnName === payment) {
                 btnElem.classList.add('button_alt-active');
             }

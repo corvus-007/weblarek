@@ -10,7 +10,7 @@ import {HeaderView} from './components/views/HeaderView.ts';
 import {EventEmitter} from './components/base/Events.ts';
 import {GalleryView} from './components/views/GalleryView.ts';
 import {CardCatalogView} from './components/views/Card/CardCatalogView.ts';
-import {IOrderApiResponse, IProduct, TPayment} from './types';
+import {IBuyer, IOrderApiResponse, IProduct} from './types';
 import {ModalView} from './components/views/ModalView.ts';
 import {CardPreviewView} from './components/views/Card/CardPreviewView.ts';
 import {BasketView} from './components/views/BasketView.ts';
@@ -42,6 +42,15 @@ const headerView = new HeaderView(headerElem, eventEmitter);
 const galleryView = new GalleryView(galleryElem);
 const modalView = new ModalView(modalElem);
 const basketView = new BasketView(cloneTemplate(basketTemplate), eventEmitter);
+const orderFormView = new OrderFormView(
+    cloneTemplate<HTMLFormElement>(orderFormTemplate),
+    eventEmitter,
+);
+const contactsFormView = new ContactsFormView(
+    cloneTemplate<HTMLFormElement>(contactsFormTemplate),
+    eventEmitter,
+);
+
 const orderSuccessView = new OrderSuccessView(
     cloneTemplate<HTMLElement>(successTemplate),
     {
@@ -89,38 +98,54 @@ eventEmitter.on<IProduct>(eventNames.CARD_BASKET_DELETE_ITEM, (item) => {
     });
 });
 
+eventEmitter.on(eventNames.BASKET_CHECKOUT, () => {
+    modalView.render({
+        content: renderOrderFormView(),
+    });
+});
+
 [
     eventNames.BASKET_ADD_ITEM,
     eventNames.BASKET_DELETE_ITEM,
     eventNames.BASKET_CLEAR,
 ].forEach((eventName) => {
-    eventEmitter.on(eventName, () => {
-        renderHeaderView();
-    });
+    eventEmitter.on(eventName, () => renderHeaderView());
+});
+
+eventEmitter.on<Pick<IBuyer, 'payment'>>(eventNames.ORDER_FORM_SET_PAYMENT, ({payment}) => {
+    customerModel.setPayment(payment);
+});
+
+eventEmitter.on<Pick<IBuyer, 'address'>>(eventNames.ORDER_FORM_SET_ADDRESS, ({address}) => {
+    customerModel.setAddress(address);
 });
 
 [
-    eventNames.BASKET_CHECKOUT,
     eventNames.CUSTOMER_SET_PAYMENT,
     eventNames.CUSTOMER_SET_ADDRESS,
 ].forEach((eventName) => {
-    eventEmitter.on(eventName, () => {
-        modalView.render({
-            content: renderOrderFormView(),
-        });
+    eventEmitter.on(eventName, () => renderOrderFormView());
+});
+
+eventEmitter.on(eventNames.ORDER_FORM_SUBMIT, () => {
+    modalView.render({
+        content: renderContactsFormView(),
     });
 });
 
+eventEmitter.on<Pick<IBuyer, 'email'>>(eventNames.CONTACTS_FORM_SET_EMAIL, ({email}) => {
+    customerModel.setEmail(email);
+});
+
+eventEmitter.on<Pick<IBuyer, 'phone'>>(eventNames.CONTACTS_FORM_SET_PHONE, ({phone}) => {
+    customerModel.setPhone(phone);
+});
+
 [
-    eventNames.ORDER_FORM_SUBMIT,
     eventNames.CUSTOMER_SET_EMAIL,
     eventNames.CUSTOMER_SET_PHONE,
 ].forEach((eventName) => {
-    eventEmitter.on(eventName, () => {
-        modalView.render({
-            content: renderContactsFormView(),
-        });
-    });
+    eventEmitter.on(eventName, () => renderContactsFormView());
 });
 
 eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {
@@ -224,15 +249,6 @@ function renderCardCatalogView(item: IProduct): HTMLElement {
 }
 
 function renderOrderFormView(): HTMLElement {
-    const orderFormView = new OrderFormView(
-        cloneTemplate<HTMLFormElement>(orderFormTemplate),
-        {
-            onClickPayment: (payment: TPayment) => customerModel.setPayment(payment),
-            onInputAddress: (address: string) => customerModel.setAddress(address),
-            onSubmit: () => eventEmitter.emit(eventNames.ORDER_FORM_SUBMIT),
-        },
-    );
-
     const {
         payment,
         address,
@@ -251,15 +267,6 @@ function renderOrderFormView(): HTMLElement {
 }
 
 function renderContactsFormView(): HTMLElement {
-    const contactsFormView = new ContactsFormView(
-        cloneTemplate<HTMLFormElement>(contactsFormTemplate),
-        {
-            onInputEmail: (email: string) => customerModel.setEmail(email),
-            onInputPhone: (phone: string) => customerModel.setPhone(phone),
-            onSubmit: () => eventEmitter.emit(eventNames.CONTACTS_FORM_SUBMIT),
-        },
-    );
-
     const {
         email,
         phone,

@@ -31,7 +31,12 @@ export const eventNames = {
     CARD_BASKET_DELETE_ITEM: 'cardBasket:deleteItem',
     CARD_CATALOG_SELECTED: 'cardCatalog:selected',
 
+    ORDER_FORM_SET_PAYMENT: 'orderForm:setPayment',
+    ORDER_FORM_SET_ADDRESS: 'orderForm:setAddress',
     ORDER_FORM_SUBMIT: 'orderForm:submit',
+
+    CONTACTS_FORM_SET_EMAIL: 'contactsForm:setEmail',
+    CONTACTS_FORM_SET_PHONE: 'contactsForm:setPhone',
     CONTACTS_FORM_SUBMIT: 'contactForm:submit',
 
     CUSTOMER_SET_PAYMENT: 'customer:setPayment',
