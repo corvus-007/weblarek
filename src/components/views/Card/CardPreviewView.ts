@@ -1,15 +1,18 @@
-import {IProduct} from '../../../types';
-import {CardCatalogView} from './CardCatalogView.ts';
+import {IProduct, TCategoryNames} from '../../../types';
 import {ensureElement} from '../../../utils/utils.ts';
+import {CardView} from './CardView.ts';
+import {CDN_URL} from '../../../utils/constants.ts';
 
-type TCardPreviewViewData = { isInBasket: boolean } & Pick<IProduct, 'description' | 'price'>;
+type TCardPreviewViewData = { isInBasket: boolean } & Pick<IProduct, 'description' | 'price' | 'image' | 'category'>;
 type TCardPreviewViewActions = {
     onClick?: () => void;
 };
 
-export class CardPreviewView extends CardCatalogView<TCardPreviewViewData> {
+export class CardPreviewView extends CardView<TCardPreviewViewData> {
     protected readonly descriptionElement: HTMLParagraphElement;
     protected readonly buttonElement: HTMLButtonElement;
+    protected readonly categoryElem: HTMLElement;
+    protected readonly imageElem: HTMLImageElement;
 
     constructor(
         protected readonly container: HTMLElement,
@@ -19,6 +22,8 @@ export class CardPreviewView extends CardCatalogView<TCardPreviewViewData> {
 
         this.descriptionElement = ensureElement<HTMLParagraphElement>('.card__text', this.container);
         this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
+        this.categoryElem = ensureElement<HTMLElement>('.card__category', this.container);
+        this.imageElem = ensureElement<HTMLImageElement>('.card__image', this.container);
 
         if (this.actions?.onClick) {
             this.buttonElement.addEventListener('click', this.actions.onClick);
@@ -42,5 +47,16 @@ export class CardPreviewView extends CardCatalogView<TCardPreviewViewData> {
         }
 
         super.price = price;
+    }
+
+    set category(category: TCategoryNames) {
+        const categoryClassModifier = CardView.getCategoryClassByCategoryName(category);
+
+        this.categoryElem.textContent = category;
+        this.categoryElem.className = `card__category ${categoryClassModifier}`;
+    }
+
+    set image(imageSrc: string) {
+        this.setImage(this.imageElem, CDN_URL + imageSrc);
     }
 }

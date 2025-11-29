@@ -1,15 +1,14 @@
-import {IProduct} from '../../../types';
+import {IProduct, TCategoryNames} from '../../../types';
 import {CardView} from './CardView.ts';
 import {ensureElement} from '../../../utils/utils.ts';
-import {categoryMap, CDN_URL} from '../../../utils/constants.ts';
+import {CDN_URL} from '../../../utils/constants.ts';
 
-type TCategoryNames = keyof typeof categoryMap;
 type TCardCatalogViewData = Pick<IProduct, 'image' | 'category'>;
 type TCardCatalogViewActions = {
     onClick?: () => void;
 };
 
-export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
+export class CardCatalogView extends CardView<TCardCatalogViewData> {
     protected readonly categoryElem: HTMLElement;
     protected readonly imageElem: HTMLImageElement;
 
@@ -28,7 +27,7 @@ export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
     }
 
     set category(category: TCategoryNames) {
-        const categoryClassModifier = CardCatalogView.getCategoryClassByCategoryName(category);
+        const categoryClassModifier = CardView.getCategoryClassByCategoryName(category);
 
         this.categoryElem.textContent = category;
         this.categoryElem.className = `card__category ${categoryClassModifier}`;
@@ -36,9 +35,5 @@ export class CardCatalogView<T> extends CardView<TCardCatalogViewData & T> {
 
     set image(imageSrc: string) {
         this.setImage(this.imageElem, CDN_URL + imageSrc);
-    }
-
-    static getCategoryClassByCategoryName(categoryName: TCategoryNames): string {
-        return categoryMap[categoryName];
     }
 }

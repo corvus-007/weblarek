@@ -1,6 +1,7 @@
 import {Component} from '../../base/Component.ts';
-import {IProduct} from '../../../types';
+import {IProduct, TCategoryNames} from '../../../types';
 import {ensureElement} from '../../../utils/utils.ts';
+import {categoryMap} from '../../../utils/constants.ts';
 
 type TCardViewData = Pick<IProduct, 'title' | 'price'>;
 
@@ -23,5 +24,13 @@ export class CardView<T> extends Component<TCardViewData & T> {
         this.priceElem.textContent = price
             ? `${price} синапсов`
             : 'Бесценно';
+    }
+
+    /**
+     * Возвращает модификатор класса по названию категории
+     * @param categoryName - название категории: 'софт-скил' | * 'хард-скил' | 'кнопка' | 'дополнительное' | 'другое'
+     */
+    static getCategoryClassByCategoryName(categoryName: TCategoryNames): string {
+        return categoryMap[categoryName];
     }
 }
