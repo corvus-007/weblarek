@@ -204,8 +204,9 @@ function renderCardPreviewView(item: IProduct): HTMLElement {
     );
 
     return cardPreviewView.render({
-        isInBasket: basketModel.hasItem(item.id),
         ...item,
+        canBuy: canBuyProduct(item),
+        buttonText: getBuyProductButtonText(item),
     });
 }
 
@@ -280,4 +281,18 @@ function renderOrderSuccessView({total}: IOrderApiResponse) {
     return orderSuccessView.render({
         total,
     });
+}
+
+function getBuyProductButtonText({id, price}: IProduct): string {
+    if (price) {
+        return basketModel.hasItem(id)
+            ? 'Удалить из корзины'
+            : 'В корзину';
+    }
+
+    return 'Недоступно';
+}
+
+function canBuyProduct({price}: IProduct): boolean {
+    return !!price;
 }

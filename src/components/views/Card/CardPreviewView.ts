@@ -3,7 +3,10 @@ import {ensureElement} from '../../../utils/utils.ts';
 import {CardView} from './CardView.ts';
 import {CDN_URL} from '../../../utils/constants.ts';
 
-type TCardPreviewViewData = { isInBasket: boolean } & Pick<IProduct, 'description' | 'price' | 'image' | 'category'>;
+type TCardPreviewViewData = {
+    canBuy: boolean,
+    buttonText: string,
+} & Pick<IProduct, 'description' | 'price' | 'image' | 'category'>;
 type TCardPreviewViewActions = {
     onClick?: () => void;
 };
@@ -30,23 +33,16 @@ export class CardPreviewView extends CardView<TCardPreviewViewData> {
         }
     }
 
-    set isInBasket(isInBasket: boolean) {
-        this.buttonElement.textContent = isInBasket
-            ? 'Удалить из корзины'
-            : 'В корзину';
+    set canBuy(canBuy: boolean) {
+        this.buttonElement.disabled = !canBuy;
+    }
+
+    set buttonText(buttonText: string) {
+        this.buttonElement.textContent = buttonText;
     }
 
     set description(description: string) {
         this.descriptionElement.textContent = description;
-    }
-
-    set price(price: number | null) {
-        if (!price) {
-            this.buttonElement.disabled = true;
-            this.buttonElement.textContent = 'Недоступно';
-        }
-
-        super.price = price;
     }
 
     set category(category: TCategoryNames) {
