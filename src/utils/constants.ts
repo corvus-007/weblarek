@@ -43,5 +43,6 @@ export const eventNames = {
     CUSTOMER_SET_ADDRESS: 'customer:setAddress',
     CUSTOMER_SET_PHONE: 'customer:setPhone',
     CUSTOMER_SET_EMAIL: 'customer:setEmail',
-    CUSTOMER_CLEAR_DATA: 'customer:clearData',
+
+    ORDER_SUCCESS_CLICK_CLOSE: 'orderSuccess:clickClose',
 };

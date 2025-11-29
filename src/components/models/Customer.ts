@@ -45,8 +45,6 @@ export class Customer {
         this.address = '';
         this.phone = '';
         this.email = '';
-
-        this.events.emit(eventNames.CUSTOMER_CLEAR_DATA);
     }
 
     checkValidity(): TBuyerValidityMessages {

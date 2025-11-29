@@ -42,24 +42,9 @@ const headerView = new HeaderView(headerElem, eventEmitter);
 const galleryView = new GalleryView(galleryElem);
 const modalView = new ModalView(modalElem);
 const basketView = new BasketView(cloneTemplate(basketTemplate), eventEmitter);
-const orderFormView = new OrderFormView(
-    cloneTemplate<HTMLFormElement>(orderFormTemplate),
-    eventEmitter,
-);
-const contactsFormView = new ContactsFormView(
-    cloneTemplate<HTMLFormElement>(contactsFormTemplate),
-    eventEmitter,
-);
-
-const orderSuccessView = new OrderSuccessView(
-    cloneTemplate<HTMLElement>(successTemplate),
-    {
-        onClose: () => {
-            modalView.close();
-        },
-    },
-);
-
+const orderFormView = new OrderFormView(cloneTemplate<HTMLFormElement>(orderFormTemplate), eventEmitter);
+const contactsFormView = new ContactsFormView(cloneTemplate<HTMLFormElement>(contactsFormTemplate), eventEmitter);
+const orderSuccessView = new OrderSuccessView(cloneTemplate<HTMLElement>(successTemplate), eventEmitter);
 
 eventEmitter.on(eventNames.CATALOG_SET_ITEMS, () => {
     const catalogCards: HTMLElement[] = catalogModel.getItems().map(renderCardCatalogView);
@@ -93,9 +78,6 @@ eventEmitter.on(eventNames.BASKET_OPEN, () => {
 
 eventEmitter.on<IProduct>(eventNames.CARD_BASKET_DELETE_ITEM, (item) => {
     basketModel.deleteItem(item);
-    modalView.render({
-        content: renderBasketView(),
-    });
 });
 
 eventEmitter.on(eventNames.BASKET_CHECKOUT, () => {
@@ -104,12 +86,18 @@ eventEmitter.on(eventNames.BASKET_CHECKOUT, () => {
     });
 });
 
+eventEmitter.on(eventNames.BASKET_CLEAR, () => {
+    renderHeaderView();
+});
+
 [
     eventNames.BASKET_ADD_ITEM,
     eventNames.BASKET_DELETE_ITEM,
-    eventNames.BASKET_CLEAR,
 ].forEach((eventName) => {
-    eventEmitter.on(eventName, () => renderHeaderView());
+    eventEmitter.on(eventName, () => {
+        renderHeaderView();
+        renderBasketView();
+    });
 });
 
 eventEmitter.on<Pick<IBuyer, 'payment'>>(eventNames.ORDER_FORM_SET_PAYMENT, ({payment}) => {
@@ -146,6 +134,10 @@ eventEmitter.on<Pick<IBuyer, 'phone'>>(eventNames.CONTACTS_FORM_SET_PHONE, ({pho
     eventNames.CUSTOMER_SET_PHONE,
 ].forEach((eventName) => {
     eventEmitter.on(eventName, () => renderContactsFormView());
+});
+
+eventEmitter.on(eventNames.ORDER_SUCCESS_CLICK_CLOSE, () => {
+    modalView.close();
 });
 
 eventEmitter.on(eventNames.CONTACTS_FORM_SUBMIT, async () => {

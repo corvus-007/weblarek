@@ -1,11 +1,10 @@
 import {Component} from '../base/Component.ts';
 import {ensureElement} from '../../utils/utils.ts';
 import {IOrderApiResponse} from '../../types';
+import {IEvents} from '../base/Events.ts';
+import {eventNames} from '../../utils/constants.ts';
 
 type TOrderSuccessViewData = Pick<IOrderApiResponse, 'total'>;
-type TOrderSuccessViewActions = {
-    onClose?: () => void;
-}
 
 export class OrderSuccessView extends Component<TOrderSuccessViewData> {
     protected readonly descriptionElem: HTMLParagraphElement;
@@ -13,16 +12,16 @@ export class OrderSuccessView extends Component<TOrderSuccessViewData> {
 
     constructor(
         protected readonly container: HTMLElement,
-        protected readonly actions?: TOrderSuccessViewActions,
+        protected readonly events: IEvents,
     ) {
         super(container);
 
         this.descriptionElem = ensureElement<HTMLParagraphElement>('.order-success__description', this.container);
         this.closeBtnElem = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
 
-        if (this.actions?.onClose) {
-            this.closeBtnElem.addEventListener('click', this.actions.onClose);
-        }
+        this.closeBtnElem.addEventListener('click', () => {
+            this.events.emit(eventNames.ORDER_SUCCESS_CLICK_CLOSE);
+        });
     }
 
     set total(total: number) {
