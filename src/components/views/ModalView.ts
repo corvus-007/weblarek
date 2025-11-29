@@ -40,7 +40,7 @@ export class ModalView extends Component<IModalViewData> {
         this.container.classList.add('modal_active');
     }
 
-    close() {
+    public close() {
         this.container.classList.remove('modal_active');
     }
 }

@@ -263,7 +263,7 @@ interface IBuyer {
 
 **Назначение:** диалоговое окно для отображения контента.  
 **Конструктор:**  
-`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и объект событий.
+`constructor(container: HTMLElement)` — принимает контейнер.
 
 **Свойства:**
 
@@ -272,9 +272,7 @@ interface IBuyer {
 
 **Методы:**
 
-- `documentPressEscHandler(evt: KeyboardEvent)` - обработчик нажатия клавиши `Esc`
-- `modalClickHandler(evt: MouseEvent)` - обработчик клика вне области
-  содержимого окна
+- `modalClickHandler(evt: MouseEvent)` - обработчик клика вне области содержимого окна
 - `set content(content: HTMLElement)` - контейнер для отображения контента
 - `open()` — открывает диалоговое окно и устанавливает обработчики события на закрытие окна по клику вне области
   содержимого окна и нажатии клавиши `Esc`
@@ -305,6 +303,8 @@ interface IBuyer {
 
 - `set title(value: string)` — устанавливает название
 - `set price(value: string)` — устанавливает цену
+- `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в
+  соответствии с категорией товара
 
 #### `CardBasketView`
 
@@ -323,7 +323,7 @@ interface IBuyer {
 
 #### `CardCatalogView`
 
-**Назначение:** Карточки товара в каталоге. `CardView <- CardBasketView <- CardCatalogView`  
+**Назначение:** Карточки товара в каталоге. `CardView <- CardCatalogView`  
 **Конструктор:**  
 `constructor(container: HTMLElement, actions?: TActions)` — принимает контейнер и объект событий
 
@@ -336,12 +336,10 @@ interface IBuyer {
 
 - `set category(category: TCategoryNames)` — задает категорию и соответствующий модификатор
 - `set image(imageSrc: string)` — устанавливает адрес изображения товара
-- `static getCategoryClassByCategoryName(categoryName: TCategoryNames): string` - получает модификатор класса в
-  соответствии с категорией товара
 
 #### `CardPreviewView`
 
-**Назначение:** Карточки товара в каталоге. `CardView <- CardBasketView <- CardCatalogView <- CardPreviewView`  
+**Назначение:** Карточки товара в каталоге. `CardView <- CardPreviewView`  
 **Конструктор:**  
 `constructor(container: HTMLElement, actions?: TActions)` — принимает контейнер и объект событий
 
@@ -349,14 +347,16 @@ interface IBuyer {
 
 - `descriptionElement: HTMLParagraphElement` — описание товара
 - `buttonElement: HTMLButtonElement` — кнопка добавления или удаления товара из корзины
+- `categoryElem: HTMLElement` — категория товара
+- `imageElem: HTMLImageElement` — изображение товара
 
 **Методы:**
 
-- `set isInBasket(isInBasket: boolean)` — задает название кнопки `Удалить из корзины` / `В корзину` от наличия товара в
-  корзине
+- `set canBuy(canBuy: boolean)` — блокирует кнопку добавления в корзину, если товар уже в корзине
+- `set buttonText(buttonText: string)` — устанавливает текст кнопки
 - `set description(description: string)` — устанавливает описание товара
-- `set price(price: number | null)` - блокирует кнопку добавления товара в корзину и изменяет текст с ценой на
-  `Недоступно`, если нет цены
+- `set category(category: TCategoryNames)` — задает категорию и соответствующий модификатор
+- `set image(imageSrc: string)` — устанавливает адрес изображения товара
 
 #### `BasketView`
 
@@ -372,7 +372,7 @@ interface IBuyer {
 
 **Методы:**
 
-- `set items(value: HTMLElement[])` — рендерит список товаров
+- `set items(value: HTMLElement[])` — выводит список товаров
 - `set total(value: number)` — обновляет итоговую сумму
 
 #### `FormView`
@@ -394,7 +394,7 @@ interface IBuyer {
 
 **Назначение:** Первый шаг оформления заказа. `FormView <- OrderFormView`  
 **Конструктор:**  
-`constructor(container: HTMLElement, actions: TOrderFormViewActions)` — принимает контейнер и объект с действиями
+`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и брокер событий
 
 **Свойства:**
 
@@ -410,7 +410,7 @@ interface IBuyer {
 
 **Назначение:** Второй шаг оформления заказа. `FormView <- ContactsFormView`  
 **Конструктор:**  
-`constructor(container: HTMLElement, actions: TContactsFormViewActions)` — принимает контейнер и объект с действиями
+`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и брокер событий
 
 **Свойства:**
 
@@ -426,7 +426,7 @@ interface IBuyer {
 
 **Назначение:** Сообщение об успешной оплате  
 **Конструктор:**  
-`constructor(container: HTMLElement, actions: TOrderSuccessViewActions)` — принимает контейнер и объект с действиями
+`constructor(container: HTMLElement, events: IEvents)` — принимает контейнер и брокер событий
 
 **Свойства:**
 
